@@ -3,9 +3,10 @@ package pl.edu.pk.cosmo.cookbookbackend.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.edu.pk.cosmo.cookbookbackend.controller.request.ChangePasswordRequest;
 import pl.edu.pk.cosmo.cookbookbackend.controller.request.SaveAccountRequest;
+import pl.edu.pk.cosmo.cookbookbackend.controller.response.AccountResponse;
 import pl.edu.pk.cosmo.cookbookbackend.converter.AccountConverter;
-import pl.edu.pk.cosmo.cookbookbackend.repository.Classes.JsonObject;
 import pl.edu.pk.cosmo.cookbookbackend.service.exception.AlreadyExistsException;
 import pl.edu.pk.cosmo.cookbookbackend.service.exception.NoAccountException;
 import pl.edu.pk.cosmo.cookbookbackend.service.interfaces.AccountService;
@@ -13,7 +14,7 @@ import pl.edu.pk.cosmo.cookbookbackend.service.interfaces.AccountService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class AccountController {
 
     private final AccountService accountService;
@@ -24,8 +25,8 @@ public class AccountController {
         this.accountConverter = accountConverter;
     }
 
-    // TESTED
-    @PostMapping("/add")
+
+    @PostMapping()
     public void save(@RequestBody @Valid final SaveAccountRequest request) {
         try {
             accountService.save(accountConverter.toDTO(request));
@@ -34,32 +35,32 @@ public class AccountController {
         }
     }
 
-    // TESTED
-    @PostMapping("/account")
-    public JsonObject getAccountById(@RequestParam(value = "id", required = true) @Valid final Long accountId){
+    @GetMapping("/{id}")
+    @ResponseBody
+    public AccountResponse getAccountById(@PathVariable final Long id){
         try {
-            return accountConverter.toJSON(accountService.getAccountById(accountId));
+            return accountConverter.toAccountResponse(accountService.getAccountById(id));
         } catch (NoAccountException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
 
-    @PostMapping("/delete")
-    public void delete(@RequestParam("id") @Valid final Long accountId) {
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable final Long id) {
         try {
-            accountService.delete(accountId);
+            accountService.delete(id);
         } catch (NoAccountException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @PostMapping("/changePassword")
-    public void changePassword(@RequestParam("id") @Valid final Long accountId, @RequestParam("password") @Valid final String newPassword) {
+    @PatchMapping ("/password")
+    public void changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         try {
-            accountService.changePassword(accountId, newPassword);
+            accountService.changePassword(changePasswordRequest);
         } catch (NoAccountException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

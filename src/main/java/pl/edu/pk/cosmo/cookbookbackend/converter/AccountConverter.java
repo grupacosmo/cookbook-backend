@@ -2,7 +2,7 @@ package pl.edu.pk.cosmo.cookbookbackend.converter;
 
 import org.springframework.stereotype.Component;
 import pl.edu.pk.cosmo.cookbookbackend.controller.request.SaveAccountRequest;
-import pl.edu.pk.cosmo.cookbookbackend.repository.Classes.JsonObject;
+import pl.edu.pk.cosmo.cookbookbackend.controller.response.AccountResponse;
 import pl.edu.pk.cosmo.cookbookbackend.repository.Entity.Account;
 import pl.edu.pk.cosmo.cookbookbackend.service.dto.AccountDTO;
 
@@ -36,12 +36,16 @@ public class AccountConverter {
                 .orElse(null);
     }
 
-    public JsonObject toJSON(final Account account) {
-        JsonObject map = new JsonObject();
-        map.put("id", Long.toString(account.getId()));
-        map.put("name", account.getName());
-        map.put("email", account.getEmail());
-        map.put("password", account.getPassword());
-        return map;
+    public AccountResponse toAccountResponse(final Account account) {
+        return Optional.ofNullable(account)
+                .map(data -> {
+                    final AccountResponse accountResponse = new AccountResponse();
+                    accountResponse.setId(data.getId());
+                    accountResponse.setName(data.getName());
+                    accountResponse.setEmail(data.getEmail());
+                    accountResponse.setPassword(data.getPassword());
+                    return accountResponse;
+                })
+                .orElse(null);
     }
 }

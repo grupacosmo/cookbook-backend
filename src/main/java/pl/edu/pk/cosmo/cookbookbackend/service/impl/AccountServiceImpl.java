@@ -1,8 +1,8 @@
 package pl.edu.pk.cosmo.cookbookbackend.service.impl;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pk.cosmo.cookbookbackend.controller.request.ChangePasswordRequest;
 import pl.edu.pk.cosmo.cookbookbackend.converter.AccountConverter;
 import pl.edu.pk.cosmo.cookbookbackend.repository.Entity.Account;
 import pl.edu.pk.cosmo.cookbookbackend.repository.interfaces.AccountRepository;
@@ -11,11 +11,9 @@ import pl.edu.pk.cosmo.cookbookbackend.service.exception.AlreadyExistsException;
 import pl.edu.pk.cosmo.cookbookbackend.service.exception.NoAccountException;
 import pl.edu.pk.cosmo.cookbookbackend.service.interfaces.AccountService;
 
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.INTERFACES)
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
@@ -61,13 +59,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(Long accountId, String newPassword) throws NoAccountException {
-        if (!accountRepository.existsById(accountId)) {
+    public void changePassword(@NotNull ChangePasswordRequest changePasswordRequest) throws NoAccountException{
+
+        Long id = changePasswordRequest.getId();
+        String newPassword = changePasswordRequest.getPassword();
+
+        if (!accountRepository.existsById(id)) {
             throw new NoAccountException(
-                    String.format("Account with id: '%d' does not exist!", accountId)
+                    String.format("Account with id: '%d' does not exist!", id)
             );
         }
-        Account account = accountRepository.findAccountById(accountId);
+        Account account = accountRepository.findAccountById(id);
         account.setPassword(newPassword);
     }
 }

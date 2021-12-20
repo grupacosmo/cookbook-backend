@@ -12,14 +12,8 @@ public class Account {
     @Id
     @GeneratedValue
     private Long id;
-
-    @Column
     private String name;
-
-    @Column
     private String email;
-
-    @Column
     private String password;
 
     public Account(){}

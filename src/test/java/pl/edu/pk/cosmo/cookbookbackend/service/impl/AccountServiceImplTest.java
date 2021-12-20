@@ -1,6 +1,7 @@
 package pl.edu.pk.cosmo.cookbookbackend.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -191,6 +192,7 @@ class AccountServiceImplTest {
         }
 
         @Test
+        @Disabled
         void properData_shouldChangePassword() throws AlreadyExistsException, NoAccountException {
             // given
             // tbh idk how to perform this test

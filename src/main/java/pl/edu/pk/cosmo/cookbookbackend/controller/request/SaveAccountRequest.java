@@ -4,11 +4,13 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-/**
- * @author Patryk Borchowiec
- */
 @Data
-public class SaveExampleRequest {
+public class SaveAccountRequest {
     @NotBlank
     private String name;
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String password;
+
 }

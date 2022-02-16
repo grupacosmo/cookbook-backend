@@ -2,11 +2,11 @@ package pl.edu.pk.cosmo.cookbookbackend.service.dto;
 
 import lombok.Data;
 
-/**
- * @author Patryk Borchowiec
- */
 @Data
-public class ExampleDTO {
+public class AccountDTO {
     private Long id;
     private String name;
+    private String email;
+    private String password;
+
 }
